@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battery Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Battery Monitor</h1>
+        </header>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Battery Tab -->
+            <div class="tab-pane active" id="batteryTab">
+                <!-- Main Battery Display -->
+                <section class="battery-display">
+                    <div class="battery-circle">
+                        <svg class="progress-ring" viewBox="0 0 200 200">
+                            <circle class="progress-ring-bg" cx="100" cy="100" r="85" />
+                            <circle class="progress-ring-fill" cx="100" cy="100" r="85" />
+                        </svg>
+                        <div class="battery-info">
+                            <div class="battery-percentage" id="batteryLevel">--</div>
+                            <div class="battery-status" id="batteryStatus">Checking...</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Stats Grid -->
+                <section class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Health</div>
+                        <div class="stat-value" id="batteryHealth">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Temperature</div>
+                        <div class="stat-value" id="batteryTemp">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Voltage</div>
+                        <div class="stat-value" id="batteryVoltage">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Time Remaining</div>
+                        <div class="stat-value" id="timeRemaining">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Capacity</div>
+                        <div class="stat-value" id="batteryCapacity">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Discharge Rate</div>
+                        <div class="stat-value" id="dischargeRate">--</div>
+                    </div>
+                </section>
+
+                <!-- Charging Info -->
+                <section class="charging-info" id="chargingInfo">
+                    <div class="info-row">
+                        <span class="info-label">Charging Speed</span>
+                        <span class="info-value" id="chargingSpeed">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Time to Full</span>
+                        <span class="info-value" id="timeToFull">--</span>
+                    </div>
+                </section>
+
+                <!-- Tips Section -->
+                <section class="tips-section">
+                    <h2>Battery Tips</h2>
+                    <div class="tip-card">
+                        <div class="tip-icon">⚡</div>
+                        <div class="tip-text">Charge between 20-80% for optimal battery health</div>
+                    </div>
+                    <div class="tip-card">
+                        <div class="tip-icon">🌡️</div>
+                        <div class="tip-text">Avoid extreme temperatures</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- History Tab -->
+            <div class="tab-pane" id="historyTab">
+                <section class="chart-section">
+                    <h2>Battery History</h2>
+                    <canvas id="batteryChart"></canvas>
+                </section>
+            </div>
+
+            <!-- Settings Tab -->
+            <div class="tab-pane" id="settingsTab">
+                <section class="settings-section">
+                    <h2>Settings</h2>
+                    <div class="control-card">
+                        <div class="control-info">
+                            <div class="control-label">Keep Screen Awake</div>
+                            <div class="control-description">Prevent screen from sleeping</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="wakeLockToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="control-card">
+                        <div class="control-info">
+                            <div class="control-label">Low Battery Alert</div>
+                            <div class="control-description">Notify when battery is low</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="notificationToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Bottom Tab Bar -->
+        <nav class="bottom-tab-bar">
+            <button class="tab-button active" data-tab="batteryTab">
+                <span class="tab-icon">🔋</span>
+                <span class="tab-label">Battery</span>
+            </button>
+            <button class="tab-button" data-tab="historyTab">
+                <span class="tab-icon">📊</span>
+                <span class="tab-label">History</span>
+            </button>
+            <button class="tab-button" data-tab="settingsTab">
+                <span class="tab-icon">⚙️</span>
+                <span class="tab-label">Settings</span>
+            </button>
+        </nav>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

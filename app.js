@@ -37,14 +37,18 @@ class BatteryMonitor {
     setupTabs() {
         const tabButtons = document.querySelectorAll('.tab-button');
         tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
                 const targetTab = button.getAttribute('data-tab');
+                console.log('Switching to tab:', targetTab);
                 this.switchTab(targetTab);
             });
         });
     }
 
     switchTab(tabId) {
+        console.log('switchTab called with:', tabId);
+        
         // Remove active class from all tabs and buttons
         document.querySelectorAll('.tab-pane').forEach(pane => {
             pane.classList.remove('active');
@@ -57,8 +61,15 @@ class BatteryMonitor {
         const targetPane = document.getElementById(tabId);
         const targetButton = document.querySelector(`[data-tab="${tabId}"]`);
         
-        if (targetPane) targetPane.classList.add('active');
-        if (targetButton) targetButton.classList.add('active');
+        console.log('Target pane:', targetPane);
+        console.log('Target button:', targetButton);
+        
+        if (targetPane) {
+            targetPane.classList.add('active');
+        }
+        if (targetButton) {
+            targetButton.classList.add('active');
+        }
 
         // Update chart if switching to history tab
         if (tabId === 'historyTab') {
@@ -223,7 +234,7 @@ class BatteryMonitor {
 
     updateProgressRing(level, charging) {
         const circle = document.querySelector('.progress-ring-fill');
-        const circumference = 2 * Math.PI * 85;
+        const circumference = 2 * Math.PI * 70;
         const offset = circumference - (level / 100) * circumference;
 
         circle.style.strokeDashoffset = offset;
@@ -233,9 +244,9 @@ class BatteryMonitor {
         if (charging) {
             color = '#3b82f6'; // Blue when charging
         } else if (level > 50) {
-            color = '#4ade80'; // Green
+            color = '#10b981'; // Green
         } else if (level > 20) {
-            color = '#facc15'; // Yellow
+            color = '#f59e0b'; // Amber
         } else {
             color = '#ef4444'; // Red
         }
@@ -272,21 +283,31 @@ class BatteryMonitor {
         // Time remaining
         if (charging) {
             const chargingTime = this.battery.chargingTime;
-            if (chargingTime === Infinity) {
+            if (chargingTime === Infinity || isNaN(chargingTime) || chargingTime <= 0) {
                 document.getElementById('timeRemaining').textContent = 'Calculating...';
             } else {
-                const hours = Math.floor(chargingTime / 3600);
-                const minutes = Math.floor((chargingTime % 3600) / 60);
-                document.getElementById('timeRemaining').textContent = `${hours}h ${minutes}m`;
+                const totalMinutes = Math.round(chargingTime / 60);
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+                if (hours > 0) {
+                    document.getElementById('timeRemaining').textContent = `${hours}h ${minutes}m`;
+                } else {
+                    document.getElementById('timeRemaining').textContent = `${minutes}m`;
+                }
             }
         } else {
             const dischargingTime = this.battery.dischargingTime;
-            if (dischargingTime === Infinity) {
+            if (dischargingTime === Infinity || isNaN(dischargingTime) || dischargingTime <= 0) {
                 document.getElementById('timeRemaining').textContent = 'Calculating...';
             } else {
-                const hours = Math.floor(dischargingTime / 3600);
-                const minutes = Math.floor((dischargingTime % 3600) / 60);
-                document.getElementById('timeRemaining').textContent = `${hours}h ${minutes}m`;
+                const totalMinutes = Math.round(dischargingTime / 60);
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+                if (hours > 0) {
+                    document.getElementById('timeRemaining').textContent = `${hours}h ${minutes}m`;
+                } else {
+                    document.getElementById('timeRemaining').textContent = `${minutes}m`;
+                }
             }
         }
     }
@@ -297,12 +318,17 @@ class BatteryMonitor {
         document.getElementById('chargingSpeed').textContent = `${speed}mA`;
 
         const chargingTime = this.battery.chargingTime;
-        if (chargingTime === Infinity) {
+        if (chargingTime === Infinity || isNaN(chargingTime) || chargingTime <= 0) {
             document.getElementById('timeToFull').textContent = 'Calculating...';
         } else {
-            const hours = Math.floor(chargingTime / 3600);
-            const minutes = Math.floor((chargingTime % 3600) / 60);
-            document.getElementById('timeToFull').textContent = `${hours}h ${minutes}m`;
+            const totalMinutes = Math.round(chargingTime / 60);
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            if (hours > 0) {
+                document.getElementById('timeToFull').textContent = `${hours}h ${minutes}m`;
+            } else {
+                document.getElementById('timeToFull').textContent = `${minutes}m`;
+            }
         }
     }
 
@@ -322,7 +348,7 @@ class BatteryMonitor {
         if (this.history.length < 2) return;
 
         // Draw grid
-        ctx.strokeStyle = '#222';
+        ctx.strokeStyle = '#f3f4f6';
         ctx.lineWidth = 1;
         for (let i = 0; i <= 4; i++) {
             const y = (height / 4) * i;
@@ -333,8 +359,8 @@ class BatteryMonitor {
         }
 
         // Draw line
-        ctx.strokeStyle = '#4ade80';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
 
         this.history.forEach((point, index) => {
